@@ -30,7 +30,7 @@ public class Jyanken_Chapter28 {
 		String[] hand = {"r", "s", "p"};
 		int max= 2;
 		int min = 0;
-		int ram = (int)(Math.random() * (max - min + 1)) + min;
+		int ram = (int)Math.floor(Math.random() * 3);
 		
 		return hand[ram];
 	}
