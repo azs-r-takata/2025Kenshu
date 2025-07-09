@@ -4,11 +4,13 @@ public class Car_Chapter15 {
 	private int gear;
 	private int speed;
 	
-	public Car_Chapter15() {
+	
+	public Car_Chapter15() { //各変数の初期化
 		gear = 1;
 		speed = 10;
 	}
 	
+	//ギアの変更とその旨の出力=====
 	public void gearChange(int afterGear) {
 		System.out.println("ギア" + this.gear + "から" + afterGear + "に切り替えました");
 		this.gear = afterGear;
@@ -23,8 +25,10 @@ public class Car_Chapter15 {
 		}
 		run();
 	}
+	//=====End
+	
 	
 	public void run() {
-		System.out.println("速度は時速" +  this.speed + "kmです");
+		System.out.println("速度は時速" +  this.speed + "kmです"); //現在の時速の表示
 	}
 }

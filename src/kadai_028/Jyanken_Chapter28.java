@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Jyanken_Chapter28 {
+	//プレイヤーの入力の処理=====
 	public String getMyChoice() {
 		String hand = null;
 		Scanner scanner = new Scanner(System.in);
@@ -13,10 +14,10 @@ public class Jyanken_Chapter28 {
 			System.out.println("チョキはscissorsのsを入力しましょう");
 			System.out.println("パーはpaperのpを入力しましょう");
 			
-			scanner = new Scanner(System.in);
+			scanner = new Scanner(System.in); //入力処理
 			hand = scanner.next();
 			
-			if(hand.equals("r")|| hand.equals("s") || hand.equals("p")) {
+			if(hand.equals("r")|| hand.equals("s") || hand.equals("p")) { //正しいものが入力されたか確認
 				scanner.close();
 				break;
 			}
@@ -26,14 +27,18 @@ public class Jyanken_Chapter28 {
 		}
 		return hand;
 	}
+	//=====End
 	
+	//相手の手をランダムで入力=====
 	public String getRandom() {
 		String[] hand = {"r", "s", "p"};
 		int ram = (int)Math.floor(Math.random() * 3);
 		
 		return hand[ram];
 	}
+	//=====End
 	
+	//じゃんけんの結果を出力=====
 	public void playGame(String player, String enemy) {
 		HashMap<String, String> hands = new HashMap<>();
 		
@@ -56,4 +61,5 @@ public class Jyanken_Chapter28 {
 			System.out.println("自分の負けです");
 		}
 	}
+	//=====End
 }

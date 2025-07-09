@@ -7,7 +7,7 @@ public class DictionaryExec_Chapter21 {
 		Dictionary_Chapter21 dictionary = new Dictionary_Chapter21();
 		
 		for(String check : word) {
-			dictionary.search(check);
+			dictionary.search(check); //検索する単語数文メソッドの実行
 		}
 		
 	}

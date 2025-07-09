@@ -5,11 +5,12 @@ public class JyankenExec_Chapter28 {
 		String player = null;
 		String enemy = null;
 		
-		Jyanken_Chapter28 jyanken = new Jyanken_Chapter28();
+		Jyanken_Chapter28 jyanken = new Jyanken_Chapter28(); //クラスの呼び出し
 		
+		//各メソッドの実行=====
 		player = jyanken.getMyChoice();
 		enemy = jyanken.getRandom();
-		
 		jyanken.playGame(player, enemy);
+		//=====End
 	}
 }
