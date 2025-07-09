@@ -6,13 +6,14 @@ import java.util.Scanner;
 public class Jyanken_Chapter28 {
 	public String getMyChoice() {
 		String hand = null;
+		Scanner scanner = new Scanner(System.in);
 		while(true) {
 			System.out.println("自分のじゃんけんの手を入力しましょう");
 			System.out.println("グーはrockのrを入力しましょう");
 			System.out.println("チョキはscissorsのsを入力しましょう");
 			System.out.println("パーはpaperのpを入力しましょう");
 			
-			Scanner scanner = new Scanner(System.in);
+			scanner = new Scanner(System.in);
 			hand = scanner.next();
 			
 			if(hand.equals("r")|| hand.equals("s") || hand.equals("p")) {
