@@ -16,6 +16,16 @@ public class SystemMS {
 			String block = scanner.next();
 			System.out.println();
 			
+			if(block.length() > 2) {
+				System.out.println("入力文字が多すぎます! ２文字で入力してください。");
+				System.out.print("開きたいマスを指定し直してください: ");
+				continue;
+			}else if(block.length() < 2) {
+				System.out.println("入力文字が少なすぎます! ２文字で入力してください。");
+				System.out.print("開きたいマスを指定し直してください: ");
+				continue;
+			}
+			
 			String[] check = {block.substring(0,1), block.substring(1,2)};
 			
 			//入力値の１つ目のないように対しての処理=====
