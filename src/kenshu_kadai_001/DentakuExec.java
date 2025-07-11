@@ -11,15 +11,15 @@ public class DentakuExec {
 		
 		Dentaku dentaku = new Dentaku();
 		
-		Scanner scan = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("1つ目の数値を入力してください:");
 		while(true) {
 			firstNumber = 0;
-			scan = new Scanner(System.in);
+			scanner = new Scanner(System.in); //1つ目の数値の入力
 			try {
 				
-				firstNumber = scan.nextInt();
+				firstNumber = scanner.nextInt();
 			}catch(InputMismatchException e) {
 				System.out.println("整数の入力ではありません");
 				System.out.print("入力し直してください：");
@@ -33,9 +33,9 @@ public class DentakuExec {
 		System.out.print("演算子を入力してください（+ - * / %）:");
 		while(true) {
 			operator = null;
-			scan = new Scanner(System.in);
+			scanner = new Scanner(System.in); //演算子の入力
 			try {
-				operator = scan.next();
+				operator = scanner.next();
 			}catch(InputMismatchException e) {
 				System.out.println("文字列の入力ではありません");
 				System.out.print("入力し直してください：");
@@ -56,15 +56,15 @@ public class DentakuExec {
 		System.out.print("2つ目の数値を入力してください:");
 		while(true) {
 			secondNumber = 0;
-			scan = new Scanner(System.in);
+			scanner = new Scanner(System.in); //2つ目の数値の入力
 			try {
-				secondNumber = scan.nextInt();
+				secondNumber = scanner.nextInt();
 			}catch(InputMismatchException e) {
 				System.out.println("整数の入力ではありません");
 				System.out.print("入力し直してください：");
 				continue;
 			}
-			scan.close();
+			scanner.close();
 			break;
 		}
 		System.out.println("→ " + secondNumber);

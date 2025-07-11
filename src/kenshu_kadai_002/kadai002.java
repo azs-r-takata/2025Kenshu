@@ -9,6 +9,7 @@ public class kadai002 {
 		ArrayList<String> name = new ArrayList<>();
 		ArrayList<Integer> money = new ArrayList<>();
 		ArrayList<Integer> sum = new ArrayList<>();
+		
 		int total = 0;
 		int maxValue = 0;
 		int maxTime = 0;
@@ -23,7 +24,7 @@ public class kadai002 {
 				System.out.println("商品名を入力してください");
 				
 				try {
-					scanner = new Scanner(System.in);
+					scanner = new Scanner(System.in); //商品名の入力
 					name.add(scanner.next());
 				}catch(InputMismatchException e) {
 					System.out.println("文字列ではありません");
@@ -33,7 +34,7 @@ public class kadai002 {
 				break;
 				
 			}
-			if(name.get(count).equals("end")) {
+			if(name.get(count).equals("end")) { //「end」を入れたか確認
 				scanner.close();
 				break;
 			}
@@ -42,7 +43,7 @@ public class kadai002 {
 				System.out.println("金額を入力してください");
 				
 				try {
-					scanner = new Scanner(System.in);
+					scanner = new Scanner(System.in); //金額の入力
 					money.add(scanner.nextInt());
 				}catch(InputMismatchException e) {
 					System.out.println("整数ではありません");
@@ -61,7 +62,7 @@ public class kadai002 {
 		
 		System.out.println("=== 商品別売上分析 ===");
 		for(int i = 0; i < count; i++) {
-			int ram = (int)Math.floor(Math.random() * 50);
+			int ram = (int)Math.floor(Math.random() * 50); //回数をランダムの設定
 			sum.add(money.get(i) * ram); 
 			total += sum.get(i);
 			
@@ -76,7 +77,7 @@ public class kadai002 {
 			}
 			
 			
-			System.out.println(name.get(i) + ": 回数=" + ram + " 合計=" + sum.get(i) + " 平均=" + (sum.get(i) / ram));
+			System.out.println(name.get(i) + ": 回数=" + ram + " 合計=" + sum.get(i) + " 平均=" + (sum.get(i) / ram)); //結果の出力
 		}
 		System.out.println();
 		
