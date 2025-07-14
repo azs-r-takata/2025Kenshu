@@ -82,7 +82,6 @@ public class Minesweeper {
 					}
 					//=====End
 				}
-				
 				System.out.print(map[i][j] + "\t");
 			}
 			System.out.println();

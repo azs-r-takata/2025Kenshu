@@ -32,7 +32,6 @@ public class kadai002 {
 					continue;
 				}
 				break;
-				
 			}
 			if(name.get(count).equals("end")) { //「end」を入れたか確認
 				scanner.close();
@@ -75,8 +74,6 @@ public class kadai002 {
 				maxTime = ram;
 				timeName = name.get(i);
 			}
-			
-			
 			System.out.println(name.get(i) + ": 回数=" + ram + " 合計=" + sum.get(i) + " 平均=" + (sum.get(i) / ram)); //結果の出力
 		}
 		System.out.println();

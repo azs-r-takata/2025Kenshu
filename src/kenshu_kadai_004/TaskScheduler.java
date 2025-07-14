@@ -20,7 +20,6 @@ public class TaskScheduler {
 			System.out.print("> ");
 			
 			systemMenu.scanner = new Scanner(System.in); //項目の選択入力
-			
 			try{
 				int menu = systemMenu.scanner.nextInt();
 				

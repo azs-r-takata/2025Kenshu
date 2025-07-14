@@ -47,7 +47,6 @@ public class SystemMenu {
 				continue;
 			}
 			
-			
 			try {
 				System.out.print("締切日（yyyy-MM-dd）: ");
 				scanner = new Scanner(System.in); //締切日の入力
@@ -76,7 +75,6 @@ public class SystemMenu {
 				
 				SimpleDateFormat checkFormat = new SimpleDateFormat("yyyy-MM-dd");
 				date = checkFormat.parse(day);
-				
 				day = checkFormat.format(date);
 				
 			}catch(InputMismatchException e) {
@@ -89,9 +87,6 @@ public class SystemMenu {
 				System.out.println("入力が不正です。日付は yyyy-MM-dd の形式で入力してください。");
 				continue;
 			}
-			
-			
-			
 			taskName.add(name);  //タスク名のリストに追加
 			priority.add(pri);   //優先度のリストに追加
 			deadLine.add(day);   //締切日のリストに追加
@@ -137,7 +132,6 @@ public class SystemMenu {
 	    		}
 	    	}
 		}
-		
 		System.out.println("=== 締切順一覧 ===");
 		for(int i = 0; i < deaName.length; i++) {
 			System.out.println("[" + (i + 1) + "] ・" + deaName[i] + " | 優先度:" + deaPriority[i] + " | 締切:" + deaDeadLine[i]); //結果の出力
@@ -273,7 +267,6 @@ public class SystemMenu {
 				continue;
 			}
 			
-			
 			try {
 				System.out.print("新しい締切日（yyyy-MM-dd） [" + deadLine.get(updateNumber - 1) + "]: ");
 				scanner = new Scanner(System.in); //変更したい締切日の入力
@@ -305,9 +298,7 @@ public class SystemMenu {
 				
 				SimpleDateFormat checkFormat = new SimpleDateFormat("yyyy-MM-dd");
 				date = checkFormat.parse(day);
-				
 				day = checkFormat.format(date);
-				
 			}catch(InputMismatchException e) {
 				System.out.println("入力が不正です。日付は yyyy-MM-dd の形式で入力してください。");
 				continue;
