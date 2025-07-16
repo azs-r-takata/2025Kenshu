@@ -97,30 +97,28 @@ public class SystemMS {
 			int checkCount = 0;
 			maps[tate][yoko] = " ";
 			
+			for(int i = tate - 1; i <= tate + 1; i++) { //削除したマスの周りを表示
+				for(int j = yoko - 1; j <= yoko + 1; j++) {
+					if(!(i == 0) && !(i == 11) && !(j == 0) && !(j == 11) && !(maps[i][j].equals(" "))) {
+						maps[i][j] = mines[i][j];
+					}
+				}
+			}
+			
 			for(int i = 1; i < 11; i++) {
 				for(int j = 1; j < 11; j++) {
-					if(maps[i][j].equals(" ")) {
+					if(maps[i][j].equals("#")) {
 						checkCount++;
 					}
 				}
 			}
 			
-			if(checkCount >= 90) { //マイン以外のマスを削除できたか判定
+			if(checkCount <= 0) { //マイン以外のマスを削除できたか判定
 				System.out.println("ゲームクリア！");//ゲームクリアの表示
 				System.out.println();
 				end = true; //ゲーム終了の真偽値ON
 				scanner.close();
 			}
-			else {
-				for(int i = tate - 1; i <= tate + 1; i++) { //削除したマスの周りを表示
-					for(int j = yoko - 1; j <= yoko + 1; j++) {
-						if(!(i == 0) && !(i == 11) && !(j == 0) && !(j == 11) && !(maps[i][j].equals(" "))) {
-							maps[i][j] = mines[i][j];
-						}
-					}
-				}
-			}
-			
 		}
 		return maps;
 	}

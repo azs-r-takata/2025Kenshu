@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Jyanken_Chapter28 {
+	public static final String ROCK = "r";
+	public static final String SCISSORS = "s";
+	public static final String PAPER = "p";
+	
 	//プレイヤーの入力の処理=====
 	public String getMyChoice() {
 		String hand = null;
@@ -17,7 +21,7 @@ public class Jyanken_Chapter28 {
 			scanner = new Scanner(System.in); //入力処理
 			hand = scanner.next();
 			
-			if(hand.equals("r")|| hand.equals("s") || hand.equals("p")) { //正しいものが入力されたか確認
+			if(hand.equals(ROCK)|| hand.equals(SCISSORS) || hand.equals(PAPER)) { //正しいものが入力されたか確認
 				scanner.close();
 				break;
 			}
@@ -31,7 +35,7 @@ public class Jyanken_Chapter28 {
 	
 	//相手の手をランダムで入力=====
 	public String getRandom() {
-		String[] hand = {"r", "s", "p"};
+		String[] hand = {ROCK, SCISSORS, PAPER};
 		int ram = (int)Math.floor(Math.random() * 3);
 		
 		return hand[ram];
@@ -42,7 +46,7 @@ public class Jyanken_Chapter28 {
 	public void playGame(String player, String enemy) {
 		HashMap<String, String> hands = new HashMap<>();
 		
-		String[] key = {"r", "s", "p"};
+		String[] key = {ROCK, SCISSORS, PAPER};
 		String[] words = {"グー", "チョキ", "パー"};
 		
 		for(int i = 0; i < 3; i++) {
@@ -54,10 +58,10 @@ public class Jyanken_Chapter28 {
 		if(player.equals(enemy)) {
 			System.out.println("あいこです");
 		}
-		else if((player.equals("r") && enemy.equals("s")) || (player.equals("s") && enemy.equals("p")) || (player.equals("p") && enemy.equals("r"))){
+		else if((player.equals(ROCK) && enemy.equals(SCISSORS)) || (player.equals(SCISSORS) && enemy.equals(PAPER)) || (player.equals(PAPER) && enemy.equals(ROCK))){
 			System.out.println("自分の勝ちです");
 		}
-		else if((player.equals("r") && enemy.equals("p")) || (player.equals("s") && enemy.equals("r")) || (player.equals("p") && enemy.equals("s"))){
+		else if((player.equals(ROCK) && enemy.equals(PAPER)) || (player.equals(SCISSORS) && enemy.equals(ROCK)) || (player.equals(PAPER) && enemy.equals(SCISSORS))){
 			System.out.println("自分の負けです");
 		}
 	}

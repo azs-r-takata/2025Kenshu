@@ -117,12 +117,11 @@ public class SystemMenu {
 		Date[] deaDate = checkDate.toArray(new Date[checkDate.size()]);
 		
 		for(int i = 0; i < deaDate.length; i++) {
-			for(int j = 0; j < deaDate.length - (i + 1); j++) {
-	    		int result = deaDate[j].compareTo(deaDate[j + 1]);	 //締切日が短い順に並べ替え
-	    		if(result > 0) {
+			for(int j = 0; j < deaDate.length - (i + 1); j++) {	 
+	    		if(deaDate[j].after(deaDate[j + 1])) { //締切日が短い順に並べ替え
 	    			String temp1 = deaName[j];
 	    		    int temp2 = deaPriority[j];
-	    		    String temp3 = deaDeadLine[i];
+	    		    String temp3 = deaDeadLine[j];
 	    		    deaName[j] = deaName[j + 1];
 	    		    deaPriority[j] = deaPriority[j + 1];
 	    		    deaDeadLine[j] = deaDeadLine[j + 1];
@@ -192,7 +191,7 @@ public class SystemMenu {
 				continue;
 			}
 			
-			if(delNumber < 0 || delNumber > taskName.size()) { //登録されているタスク数以上の数が入力された場合
+			if(delNumber <= 0 || delNumber > taskName.size()) { //登録されているタスク数以上の数が入力された場合
 				System.out.println("該当する番号がありません。入力し直してください。");
 				continue;
 			}
@@ -232,7 +231,7 @@ public class SystemMenu {
 				continue;
 			}
 			
-			if(updateNumber < 0 || updateNumber > taskName.size()) { //登録されているタスク数以上の数が入力された場合
+			if(updateNumber <= 0 || updateNumber > taskName.size()) { //登録されているタスク数以上の数が入力された場合
 				System.out.println("該当する番号がありません。入力し直してください。");
 				continue;
 			}
@@ -277,10 +276,7 @@ public class SystemMenu {
 				for(int i = 0; i < checkString.length; i++) {
 				    checkInt[i] = Integer.parseInt(checkString[i]); //分けた文字列を整数に変換
 				}
-				System.out.println(checkInt[0]);
-				System.out.println(checkInt[1]);
-				System.out.println(checkInt[2]);
-				
+
 				if(checkInt[0] < 2000 || checkString[0].length() > 4 || checkString[0].length() < 4) { //年の内容に不備がないかチェック
 					System.out.println("入力が不正です。入力し直してください。");
 					continue;

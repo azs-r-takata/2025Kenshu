@@ -1,14 +1,8 @@
 package kadai_015;
 
 public class Car_Chapter15 {
-	private int gear;
-	private int speed;
-	
-	
-	public Car_Chapter15() { //各変数の初期化
-		gear = 1;
-		speed = 10;
-	}
+	private int gear = 1;
+	private int speed = 10;
 	
 	//ギアの変更とその旨の出力=====
 	public void gearChange(int afterGear) {
@@ -23,7 +17,6 @@ public class Car_Chapter15 {
 		case 5 -> this.speed = 50;
 		default -> this.speed = 10;
 		}
-		run();
 	}
 	//=====End
 	
