@@ -35,7 +35,7 @@ public class PostgresSystem {
 				boolean delete_flag = rs.getBoolean("delete_flag");
 				
 				if(delete_flag == false) {
-					System.out.println(id + "\t|\t" + name + "\t|\t" + adress + "\t|\t" + phone + "\t|\t" + city);
+					System.out.printf("%-4s| %-10s| %-25s| %-15s| %-10s\n", id, name, adress, phone, city);
 				}
 			}
 		}catch (SQLException e) {
