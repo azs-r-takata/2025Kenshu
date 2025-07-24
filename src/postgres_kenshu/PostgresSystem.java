@@ -14,14 +14,9 @@ public class PostgresSystem {
 	String user = "postgres";
 	String password = "Az-s06";
 
-	Scanner scanner;
+	public final Scanner scanner = new Scanner(System.in);
 	
-	public static boolean isValidEmail(String email) {
-		String emailRegex = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2.}$";
-		return email != null && email.matches(emailRegex);
-	}
-	
-	public void DBShow() {
+	public void showDB() {
 		System.out.println("---------------- 会員一覧 ----------------");
 		System.out.println("ID\t|\t名前\t|\tメールアドレス\t|\t電話番号\t|\t住所");
 		System.out.println("------------------------------------------------------------");
@@ -39,18 +34,20 @@ public class PostgresSystem {
 				String city = rs.getString("city");
 				boolean delete_flag = rs.getBoolean("delete_flag");
 				
-				if(delete_flag == true) {
+				if(delete_flag == false) {
 					System.out.println(id + "\t|\t" + name + "\t|\t" + adress + "\t|\t" + phone + "\t|\t" + city);
 				}
 			}
 		}catch (SQLException e) {
 			System.out.println("接続失敗");
 			e.printStackTrace();
+			System.out.println("アプリを終了します。");
+			System.exit(1);
 		}
 		System.out.println("------------------------------------------------------------");
 	}
 	
-	public void DBAdd() {
+	public void addDB() {
 		String name = null;
 		String adress = null;
 		String phone = null;
@@ -60,8 +57,6 @@ public class PostgresSystem {
 		while(true) {
 			System.out.print("会員名：");
 			try {
-				scanner = new Scanner(System.in);
-				
 				String checker = scanner.nextLine();
 				if(checker.isEmpty()) { //空Enterが押された際の処理
 					System.out.println("※会員名は必須です");
@@ -79,8 +74,6 @@ public class PostgresSystem {
 			
 			System.out.print("メールアドレス：");
 			try {
-				scanner = new Scanner(System.in);
-				
 				String checker = scanner.nextLine();
 				if(checker.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) { //空Enterが押された際の処理
 					adress = checker;
@@ -98,7 +91,6 @@ public class PostgresSystem {
 			
 			System.out.print("電話番号（任意）：");
 			try {
-				scanner = new Scanner(System.in);
 				String checker = scanner.nextLine();
 				if(checker.isEmpty()) { //空Enterが押された際の処理
 					phone = " ";
@@ -114,7 +106,6 @@ public class PostgresSystem {
 			
 			System.out.print("住所（任意）：");
 			try {
-				scanner = new Scanner(System.in);
 				String checker = scanner.nextLine();
 				if(checker.isEmpty()) { //空Enterが押された際の処理
 					 city = " ";
@@ -132,23 +123,14 @@ public class PostgresSystem {
 		}
 		
 		System.out.print("この内容で登録しますか？（y/n）：");
-		scanner = new Scanner(System.in);
 		String check = scanner.next();
-		int count = 0;
+		int count = getNumber();
 		if(check.equalsIgnoreCase("y")) {
 			try (Connection conn = DriverManager.getConnection(url, user, password)) {
-				String last = "SELECT id FROM members ORDER BY id DESC LIMIT 1";
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(last);
-				
-				while(rs.next()) {
-					count = rs.getInt("id") + 1;	
-				}
-				
 				if(count <= 0) {
 					count = 1;
 				}
-				
+				count += 1;
 				String insert = "INSERT INTO members (id, name, adress, phone, city, delete_flag) VALUES (?, ?, ?, ?, ?, ?)";
 				PreparedStatement pstmt = conn.prepareStatement(insert);
 				pstmt.setInt(1, count);
@@ -156,7 +138,7 @@ public class PostgresSystem {
 				pstmt.setString(3, adress);
 				pstmt.setString(4, phone);
 				pstmt.setString(5, city);
-				pstmt.setBoolean(6, true);
+				pstmt.setBoolean(6, false);
 				
 				conn.setAutoCommit(false);
 				pstmt.executeUpdate();
@@ -166,6 +148,8 @@ public class PostgresSystem {
 			}catch (SQLException e) {
 				System.out.println("接続失敗");
 				e.printStackTrace();
+				System.out.println("アプリを終了します。");
+				System.exit(1);
 			}
 		}
 		else {
@@ -173,21 +157,19 @@ public class PostgresSystem {
 		}
 	}
 	
-	public void DBUpdate() {
+	public void updateDB() {
 		int id_number = 0;
 		String name = null;
 		String adress = null;
 		String phone = null;
 		String city = null;
-		int count = 0;
+		int count = getNumber();
 		
 		System.out.println("---------------- 会員情報更新 ----------------");
 		
 		try (Connection conn = DriverManager.getConnection(url, user, password)) {
-			Statement stmt = conn.createStatement();
 			while (true) {
 				try {
-					scanner = new Scanner(System.in);
 					System.out.print("更新対象の会員ID：");
 					
 					String checker = scanner.nextLine();
@@ -195,12 +177,6 @@ public class PostgresSystem {
 						return;
 					}
 					else { //入力された際の処理
-						String last = "SELECT id FROM members ORDER BY id DESC LIMIT 1";
-						ResultSet rs = stmt.executeQuery(last);
-						
-						while(rs.next()) {
-							count = rs.getInt("id");	
-						}
 						id_number = Integer.parseInt(checker);
 						
 						if(id_number == 0 || id_number > count) {
@@ -221,8 +197,6 @@ public class PostgresSystem {
 			while(true) {
 				System.out.print("新しい会員名：");
 				try {
-					scanner = new Scanner(System.in);
-					
 					String checker = scanner.nextLine();
 					if(checker.isEmpty()) { //空Enterが押された際の処理
 						System.out.println("※会員名は必須です");
@@ -240,8 +214,6 @@ public class PostgresSystem {
 				
 				System.out.print("新しいメールアドレス：");
 				try {
-					scanner = new Scanner(System.in);
-					
 					String checker = scanner.nextLine();
 					if(checker.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) { //空Enterが押された際の処理
 						adress = checker;
@@ -259,7 +231,6 @@ public class PostgresSystem {
 				
 				System.out.print("新しい電話番号：");
 				try {
-					scanner = new Scanner(System.in);
 					String checker = scanner.nextLine();
 					if(checker.isEmpty()) { //空Enterが押された際の処理
 						phone = " ";
@@ -275,7 +246,6 @@ public class PostgresSystem {
 				
 				System.out.print("新しい住所：");
 				try {
-					scanner = new Scanner(System.in);
 					String checker = scanner.nextLine();
 					if(checker.isEmpty()) { //空Enterが押された際の処理
 						 city = " ";
@@ -293,7 +263,6 @@ public class PostgresSystem {
 			}
 			
 			System.out.print("この内容で更新しますか？（y/n）：");
-			scanner = new Scanner(System.in);
 			String check = scanner.next();
 			if(check.equalsIgnoreCase("y")) {
 				String update = "UPDATE members SET name = ?, adress = ?, phone = ?, city = ? WHERE id = ?";
@@ -316,22 +285,22 @@ public class PostgresSystem {
 		}catch (SQLException e) {
 			System.out.println("接続失敗");
 			e.printStackTrace();
+			System.out.println("アプリを終了します。");
+			System.exit(1);
 		}
 	}
 	
-	public void DBDelete() {
+	public void deleteDB() {
 		int id_number = 0;
 		String name = null;
 		String adress = null;
-		int count = 0;
+		int count = getNumber();
 		
 		System.out.println("---------------- 会員削除 ----------------");
 		
 		try (Connection conn = DriverManager.getConnection(url, user, password)) {
-			Statement stmt = conn.createStatement();
 			while (true) {
 				try {
-					scanner = new Scanner(System.in);
 					System.out.print("削除対象の会員ID：");
 					
 					String checker = scanner.nextLine();
@@ -339,12 +308,6 @@ public class PostgresSystem {
 						return;
 					}
 					else { //入力された際の処理
-						String last = "SELECT id FROM members ORDER BY id DESC LIMIT 1";
-						ResultSet rs = stmt.executeQuery(last);
-						
-						while(rs.next()) {
-							count = rs.getInt("id");	
-						}
 						id_number = Integer.parseInt(checker);
 						
 						if(id_number == 0 || id_number > count) {
@@ -378,10 +341,9 @@ public class PostgresSystem {
 			System.out.println("------------------------------------------------");
 			
 			System.out.print("本当に削除してよろしいですか？（y/n）：");
-			scanner = new Scanner(System.in);
 			String check = scanner.next();
 			if(check.equalsIgnoreCase("y")) {
-				String update = "UPDATE members SET delete_flag = FALSE WHERE id = ?";
+				String update = "UPDATE members SET delete_flag = TRUE WHERE id = ?";
 				PreparedStatement pstmt_update = conn.prepareStatement(update);
 				pstmt_update.setInt(1, id_number);
 					
@@ -397,25 +359,25 @@ public class PostgresSystem {
 		}catch (SQLException e) {
 			System.out.println("接続失敗");
 			e.printStackTrace();
+			System.out.println("アプリを終了します。");
+			System.exit(1);
 		}
 	}
 	
-	public void DBSearch() {
+	public void searchDB() {
 		int id_number = 0;
-		int count = 0;
+		int count = getNumber();
 		String name = null;
 		String adress = null;
 		String phone = null;
 		String city = null;
-		boolean delete_flag = true;
+		boolean delete_flag = false;
 		
 		System.out.println("---------------- 会員検索 ----------------");
 		
 		try (Connection conn = DriverManager.getConnection(url, user, password)) {
-			Statement stmt = conn.createStatement();
 			while (true) {
 				try {
-					scanner = new Scanner(System.in);
 					System.out.print("検索する会員ID：");
 					
 					String checker = scanner.nextLine();
@@ -423,12 +385,6 @@ public class PostgresSystem {
 						return;
 					}
 					else { //入力された際の処理
-						String last = "SELECT id FROM members ORDER BY id DESC LIMIT 1";
-						ResultSet rs = stmt.executeQuery(last);
-						
-						while(rs.next()) {
-							count = rs.getInt("id");	
-						}
 						id_number = Integer.parseInt(checker);
 						
 						if(id_number == 0 || id_number > count) {
@@ -470,13 +426,34 @@ public class PostgresSystem {
 		}catch (SQLException e) {
 			System.out.println("接続失敗");
 			e.printStackTrace();
+			System.out.println("アプリを終了します。");
+			System.exit(1);
 		}
 	}
 	
-	public boolean DBEnd() {
+	public boolean endDB() {
 		System.out.println("会員管理システムを終了します。お疲れ様でした！");
 		scanner.close();
 		boolean end =true;
 		return end;
+	}
+	
+	public int getNumber() {
+		int count = 0;
+		try (Connection conn = DriverManager.getConnection(url, user, password)) {
+			Statement stmt = conn.createStatement();
+		    String last = "SELECT id FROM members ORDER BY id DESC LIMIT 1";
+		    ResultSet rs = stmt.executeQuery(last);
+		
+		    while(rs.next()) {
+			     count =  rs.getInt("id");	
+		    }
+		}catch (SQLException e) {
+			System.out.println("接続失敗");
+			e.printStackTrace();
+			System.out.println("アプリを終了します。");
+			System.exit(1);
+		}
+		return count;
 	}
 }
