@@ -512,7 +512,7 @@ public class ShowSystem {
 	
 	//終了処理=====
 	public boolean endSystem() {
-		System.out.println("利用状況確認システムを終了します。お疲れ様でした！");
+		System.out.println("クレジットカード情報管理システムを終了します。お疲れ様でした！");
 		scanner.close();
 		boolean end =true;
 		return end;

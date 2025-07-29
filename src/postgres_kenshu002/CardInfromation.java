@@ -12,7 +12,7 @@ public class CardInfromation {
 		
 		do {
 			System.out.println("==============================");
-			System.out.println("利用状況確認システム - メインメニュー");
+			System.out.println("クレジットカード情報確認システム - メインメニュー");
 			System.out.println("==============================");
 			System.out.println("1. 利用履歴確認");
 			System.out.println("2. 不使用の会員確認");
