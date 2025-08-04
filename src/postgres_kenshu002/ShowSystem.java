@@ -132,6 +132,7 @@ public class ShowSystem {
 		Timestamp useTime = null;
 		int amount = 0;
 		String categoryName = null;
+		String cardType = null;
 		
 		try(Connection conn = DriverManager.getConnection(url, user, password)){
 			System.out.println("---------------- 利用履歴 ----------------");
@@ -171,47 +172,28 @@ public class ShowSystem {
 				}
 			}
 			
-			String selectAcb = "SELECT m.name AS member_name, c.card_number, a.acb_used_at, a.acb_amount, ca.name AS category_name FROM usage_records_acb a JOIN credit_cards c ON a.acb_card_id = c.id JOIN card_members m ON c.member_id = m.id JOIN category_acb_master ca ON a.acb_category_id = ca.id WHERE a.acb_used_at BETWEEN ? AND ?";
-			PreparedStatement pstmtAcb = conn.prepareStatement(selectAcb);
-			pstmtAcb.setTimestamp(1, start);
-			pstmtAcb.setTimestamp(2, end);
-			ResultSet rsAcb = pstmtAcb.executeQuery();
+			String select = "SELECT m.name AS member_name, c.card_number, a.acb_used_at AS used_at, a.acb_amount AS amount, ca.name AS category_name, c.card_type FROM usage_records_acb a JOIN credit_cards c ON a.acb_card_id = c.id JOIN card_members m ON c.member_id = m.id JOIN category_acb_master ca ON a.acb_category_id = ca.id WHERE a.acb_used_at BETWEEN ? AND ? UNION SELECT m.name AS member_name, c.card_number, n.num_used_at, n.num_amount, cn.name, c.card_type AS category_name FROM usage_records_num n JOIN credit_cards c ON n.num_card_id = c.id JOIN card_members m ON c.member_id = m.id JOIN category_num_master cn ON n.num_category_id = cn.id WHERE n.num_used_at BETWEEN ? AND ? ORDER BY member_name ASC";
+			PreparedStatement pstmt = conn.prepareStatement(select);
+			pstmt.setTimestamp(1, start);
+			pstmt.setTimestamp(2, end);
+			pstmt.setTimestamp(3, start);
+			pstmt.setTimestamp(4, end);
+			ResultSet rs = pstmt.executeQuery();
 			
-			System.out.println("ACBカード情報");
-			System.out.println("会員名\t|\tカード番号\t|\t利用日\t|\t金額\t|\tカテゴリ");
+			System.out.println("カード情報");
+			System.out.println("会員名\t|\tカード番号\t|\t利用日\t|\t金額\t|\tカテゴリ\t|\tカードタイプ");
 			System.out.println("------------------------------------------------------------");
 			
-			while(rsAcb.next()) {
-				memberName = rsAcb.getString("member_name");
-				cardNumber = rsAcb.getString("card_number");
-				useTime = rsAcb.getTimestamp("acb_used_at");
-				amount = rsAcb.getInt("acb_amount");
-			    categoryName = rsAcb.getString("category_name");
+			while(rs.next()) {
+				memberName = rs.getString("member_name");
+				cardNumber = rs.getString("card_number");
+				useTime = rs.getTimestamp("used_at");
+				amount = rs.getInt("amount");
+			    categoryName = rs.getString("category_name");
+			    cardType = rs.getString("card_type");
 			    
-			    System.out.printf("%-5s| %-18s| %-22s| %-6s| %-10s\n", memberName, cardNumber, useTime, amount, categoryName);
+			    System.out.printf("%-5s| %-18s| %-22s| %-6s| %-10s| %-5s\n", memberName, cardNumber, useTime, amount, categoryName, cardType);
 			}
-			System.out.println();
-			
-			String selectNum = "SELECT m.name AS member_name, c.card_number, n.num_used_at, n.num_amount, cn.name AS category_name FROM usage_records_num n JOIN credit_cards c ON n.num_card_id = c.id JOIN card_members m ON c.member_id = m.id JOIN category_num_master cn ON n.num_category_id = cn.id WHERE n.num_used_at BETWEEN ? AND ?";
-			PreparedStatement pstmtNum = conn.prepareStatement(selectNum);
-			pstmtNum.setTimestamp(1, start);
-			pstmtNum.setTimestamp(2, end);
-			ResultSet rsNum = pstmtNum.executeQuery();
-			
-			System.out.println("NUMカード情報");
-			System.out.println("会員名\t|\tカード番号\t|\t利用日\t|\t金額\t|\tカテゴリ");
-			System.out.println("------------------------------------------------------------");
-			
-			while(rsNum.next()) {
-				memberName = rsNum.getString("member_name");
-				cardNumber = rsNum.getString("card_number");
-				useTime = rsNum.getTimestamp("num_used_at");
-				amount = rsNum.getInt("num_amount");
-			    categoryName = rsNum.getString("category_name");
-			    
-			    System.out.printf("%-5s| %-18s| %-22s| %-6s| %-10s\n", memberName, cardNumber, useTime, amount, categoryName);
-			}
-			System.out.println("------------------------------------------------");
 			System.out.println();
 			
 		}catch (SQLException e) {
@@ -242,45 +224,26 @@ public class ShowSystem {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime threeMonthsBefore = now.minusMonths(3);
 			
-			System.out.println("ACBカード情報");
+			System.out.println("カード情報");
 			System.out.println("会員名\\t|\\tカード番号\\t|\\tメールアドレス\\t|\\t電話番号\\t|\\t有効期限\\t|カード種類");
-			String selectAcb = "SELECT m.name, c.card_number, m.email, m.phone, c.expiration_date, c.card_type FROM card_members m JOIN credit_cards c ON m.id = c.member_id JOIN usage_records_acb a ON c.id = a.acb_card_id WHERE NOT EXISTS (SELECT id FROM credit_cards WHERE acb_used_at BETWEEN ? AND ?)";
-			PreparedStatement pstmtAcb = conn.prepareStatement(selectAcb);
-			pstmtAcb.setTimestamp(1, Timestamp.valueOf(threeMonthsBefore));
-			pstmtAcb.setTimestamp(2, Timestamp.valueOf(now));
-			ResultSet rsAcb = pstmtAcb.executeQuery();
+			String select = "SELECT m.name, c.card_number, m.email, m.phone, c.expiration_date, c.card_type FROM card_members m JOIN credit_cards c ON m.id = c.member_id JOIN usage_records_acb a ON c.id = a.acb_card_id WHERE NOT EXISTS (SELECT id FROM credit_cards WHERE acb_used_at BETWEEN ? AND ?) UNION SELECT m.name, c.card_number, m.email, m.phone, c.expiration_date, c.card_type FROM card_members m JOIN credit_cards c ON m.id = c.member_id JOIN usage_records_num n ON c.id = n.num_card_id WHERE NOT EXISTS (SELECT id FROM credit_cards WHERE num_used_at BETWEEN ? AND ?) ORDER BY name ASC";
+			PreparedStatement pstmt = conn.prepareStatement(select);
+			pstmt.setTimestamp(1, Timestamp.valueOf(threeMonthsBefore));
+			pstmt.setTimestamp(2, Timestamp.valueOf(now));
+			pstmt.setTimestamp(3, Timestamp.valueOf(threeMonthsBefore));
+			pstmt.setTimestamp(4, Timestamp.valueOf(now));
+			ResultSet rs = pstmt.executeQuery();
 			
-			while(rsAcb.next()) {
-				memberName = rsAcb.getString("name");
-				cardNumber = rsAcb.getString("card_number");
-				email = rsAcb.getString("email");
-				phone = rsAcb.getString("phone");
-				expiration = rsAcb.getDate("expiration_date");
-			    cardType = rsAcb.getString("card_type");
+			while(rs.next()) {
+				memberName = rs.getString("name");
+				cardNumber = rs.getString("card_number");
+				email = rs.getString("email");
+				phone = rs.getString("phone");
+				expiration = rs.getDate("expiration_date");
+			    cardType = rs.getString("card_type");
 			    
 			    System.out.printf("%-5s| %-18s| %-22s| %-10s| %-12s| %-5s\n", memberName, cardNumber, email, phone, expiration, cardType);
 			}
-			System.out.println();
-			
-			System.out.println("NUMカード情報");
-			System.out.println("会員名\\t|\\tカード番号\\t|\\tメールアドレス\\t|\\t電話番号\\t|\\t有効期限\\t|カード種類");
-			String selectNum = "SELECT m.name, c.card_number, m.email, m.phone, c.expiration_date, c.card_type FROM card_members m JOIN credit_cards c ON m.id = c.member_id JOIN usage_records_num n ON c.id = n.num_card_id WHERE NOT EXISTS (SELECT id FROM credit_cards WHERE num_used_at BETWEEN ? AND ?)";
-			PreparedStatement pstmtNum = conn.prepareStatement(selectNum);
-			pstmtNum.setTimestamp(1, Timestamp.valueOf(threeMonthsBefore));
-			pstmtNum.setTimestamp(2, Timestamp.valueOf(now));
-			ResultSet rsNum = pstmtNum.executeQuery();
-			
-			while(rsNum.next()) {
-				memberName = rsNum.getString("name");
-				cardNumber = rsNum.getString("card_number");
-				email = rsNum.getString("email");
-				phone = rsNum.getString("phone");
-				expiration = rsNum.getDate("expiration_date");
-			    cardType = rsNum.getString("card_type");
-			    
-			    System.out.printf("%-5s| %-18s| %-22s| %-10s| %-12s| %-5s\n", memberName, cardNumber, email, phone, expiration, cardType);
-			}
-			
 			System.out.println("------------------------------------------------");
 			System.out.println();
 		}catch (SQLException e) {
